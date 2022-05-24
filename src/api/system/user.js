@@ -36,6 +36,15 @@ export function updateUser(data) {
   })
 }
 
+// 审核用户
+export function applyUser(data) {
+  return request({
+    url: '/system/user/approve',
+    method: 'post',
+    data: data
+  })
+}
+
 // 删除用户
 export function delUser(userId) {
   return request({
