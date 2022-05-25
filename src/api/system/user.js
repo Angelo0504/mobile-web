@@ -134,3 +134,20 @@ export function updateAuthRole(data) {
     params: data
   })
 }
+
+//查询商机列表
+export function listBusiness() {
+  return request({
+    url: '/system/info/list',
+    method: 'get'
+  })
+}
+
+// 审核业务
+export function applyBusiness(data) {
+  return request({
+    url: '/system/info/approve',
+    method: 'post',
+    data: data
+  })
+}

@@ -4,15 +4,15 @@
         <!--用户数据-->
         <el-col :span="20" :xs="24">
             <el-row :gutter="20" class="mb8">
-                <el-form :model="queryParams" ref="queryForm" :inline="true"  label-width="68px" class="el-form-search">
+                <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px" class="el-form-search">
                     <el-form-item label="用户名称" prop="userName" class="el-form-search-item">
-                        <el-input v-model="queryParams.userName" placeholder="请输入用户名称" clearable size="small"  @keyup.enter.native="handleQuery" />
+                        <el-input v-model="queryParams.userName" placeholder="请输入用户名称" clearable size="small" @keyup.enter.native="handleQuery" />
                     </el-form-item>
-                    <el-form-item label="手机号码" prop="phonenumber" class="el-form-search-item">
-                        <el-input v-model="queryParams.phonenumber" placeholder="请输入手机号码" clearable size="small"  @keyup.enter.native="handleQuery" />
+                    <el-form-item label="手机号码" prop="mobile" class="el-form-search-item">
+                        <el-input v-model="queryParams.mobile" placeholder="请输入手机号码" clearable size="small" @keyup.enter.native="handleQuery" />
                     </el-form-item>
                     <el-form-item label="状态" prop="status" class="el-form-search-item">
-                        <el-select v-model="queryParams.status" placeholder="用户状态" clearable size="small" >
+                        <el-select v-model="queryParams.status" placeholder="用户状态" clearable size="small">
                             <el-option v-for="dict in dict.type.sys_normal_disable" :key="dict.value" :label="dict.label" :value="dict.value" />
                         </el-select>
                     </el-form-item>
@@ -24,20 +24,20 @@
             </el-row>
 
             <el-table :height="tableHeight" v-loading="loading" :data="userList">
-                <el-table-column label="用户编号" align="center" key="userId" prop="userId"  />
-                <el-table-column label="用户名称" align="center" key="userName" prop="userName"  :show-overflow-tooltip="true" />
-                <el-table-column label="用户昵称" align="center" key="nickName" prop="nickName"  :show-overflow-tooltip="true" />
-                <el-table-column label="手机号码" align="center" key="phonenumber" prop="phonenumber"  width="120" />
-                <el-table-column label="状态" align="center" key="status" >
+                <el-table-column label="用户名称" align="center" key="userName" prop="userName" :show-overflow-tooltip="true" />
+                <el-table-column label="手机号码" align="center" key="mobile" prop="mobile" width="120" />
+                <el-table-column label="地址" align="center" key="address" prop="address" :show-overflow-tooltip="true" />
+                <el-table-column label="状态" align="center" key="status">
                     <template slot-scope="scope">
                         <el-switch v-model="scope.row.status" active-value="0" inactive-value="1" disabled></el-switch>
                     </template>
                 </el-table-column>
-                <el-table-column label="创建时间" align="center" prop="createTime"  width="160">
+                <el-table-column label="创建时间" align="center" prop="createTime" width="160">
                     <template slot-scope="scope">
                         <span>{{ parseTime(scope.row.createTime) }}</span>
                     </template>
                 </el-table-column>
+                <el-table-column label="备注" align="center" key="remark" prop="remark" :show-overflow-tooltip="true" />
                 <el-table-column label="操作" align="center" width="160" class-name="small-padding fixed-width">
                     <template slot-scope="scope">
                         <el-button size="mini" type="text" icon="el-icon-edit" :disabled="scope.row.checkStatus" @click="handleUpdate(scope.row)">审核</el-button>
@@ -50,17 +50,39 @@
     </el-row>
 
     <!-- 添加或修改用户配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+    <el-dialog title="办理业务审核" :visible.sync="open" width="600px" append-to-body>
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
             <el-row>
                 <el-col :span="12">
-                    <el-form-item label="用户昵称" prop="nickName">
-                        <el-input v-model="form.nickName" placeholder="请输入用户昵称" maxlength="30" disabled />
+                    <el-form-item label="用户昵称" prop="userName">
+                        <el-input v-model="form.userName" placeholder="请输入用户昵称" maxlength="30" disabled />
                     </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                    <el-form-item label="手机号码" prop="phonenumber">
-                        <el-input v-model="form.phonenumber" placeholder="请输入手机号码" maxlength="11" disabled />
+                    <el-form-item label="手机号码" prop="mobile">
+                        <el-input v-model="form.mobile" placeholder="请输入手机号码" maxlength="11" disabled />
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="申请时间" prop="createTime">
+                        <el-input v-model="form.createTime" placeholder="请输入手机号码" maxlength="11" disabled />
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="申请地址" prop="address">
+                        <el-input v-model="form.address" placeholder="请输入申请地址" maxlength="11" disabled />
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="办理业务">
+                        <el-select v-model="value" multiple placeholder="请选择">
+                            <el-option-group v-for="group in businessOptions" :key="group.label" :label="group.label">
+                                <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
+                                </el-option>
+                            </el-option-group>
+                            <!-- <el-option v-for="item in businessOptions" :key="item.value" :label="item.label" :value="item.value">
+                            </el-option> -->
+                        </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -84,9 +106,8 @@
 
 <script>
 import {
-    listUser,
-    getUser,
-    applyUser,
+    listBusiness,
+    applyBusiness,
 } from "@/api/system/user";
 
 export default {
@@ -103,32 +124,51 @@ export default {
             total: 0,
             // 用户表格数据
             userList: null,
-            // 弹出层标题
-            title: "",
             // 是否显示弹出层
             open: false,
-            // 默认密码
-            initPassword: undefined,
-            // 日期范围
-            dateRange: [],
             // 表单参数
-            form: {},
-            defaultProps: {
-                children: "children",
-                label: "label",
+            form: {
+                
             },
+            //办理业务
+            businessOptions: [{
+                label: '神州行、动感地带积分激励',
+                options: [{
+                    label: "套餐139元,折后39元,玄新授权点奖励300分",
+                    value: 1
+                }, {
+                    label: "套餐199元,折后109元,玄新授权点奖励400分",
+                    value: 2
+                }, {
+                    label: "套餐299元,折后119元,玄新授权点奖励500分",
+                    value: 3
+                }]
+            }, {
+                label: '宽带积分激励',
+                options: [{
+                    label: "宽带,玄新授权点奖励:100分/条",
+                    value: 4
+                }]
+            }, {
+                label: "入网积分激励",
+                options: [{
+                    label: "100元39套餐卡,玄新授权点奖励:30分/个",
+                    value: 5
+                }]
+            }],
+
+            value: [],
 
             // 查询参数
             queryParams: {
                 pageNum: 1,
                 pageSize: 20,
                 userName: undefined,
-                phonenumber: undefined,
-                status: undefined,
-                deptId: undefined,
-                userType: "01",
+                mobile: undefined,
+                status: undefined
+                
             },
-            
+
             // 表单校验
             rules: {
                 nickName: [{
@@ -153,16 +193,13 @@ export default {
 
     created() {
         this.getList();
-        this.getConfigKey("sys.user.initPassword").then((response) => {
-            this.initPassword = response.msg;
-        });
     },
     methods: {
 
-        /** 查询用户列表 */
+        /** 查询商机列表 */
         getList() {
             this.loading = true;
-            listUser(this.addDateRange(this.queryParams, this.dateRange)).then(
+            listBusiness().then(
                 (response) => {
                     this.userList = response.rows;
                     this.total = response.total;
@@ -182,9 +219,10 @@ export default {
             this.form = {
                 userId: undefined,
                 userName: undefined,
-                nickName: undefined,
-                phonenumber: undefined,
+                mobile: undefined,
+                address:"",
                 checkStatus: 1,
+                comboType:""
             };
             this.resetForm("form");
         },
@@ -197,33 +235,27 @@ export default {
 
         /** 重置按钮操作 */
         resetQuery() {
-            this.dateRange = [];
             this.resetForm("queryForm");
             this.handleQuery();
         },
 
         /** 修改按钮操作 */
         handleUpdate(row) {
-            this.reset();
-            const userId = row.userId || this.ids;
-            getUser(userId).then((response) => {
-                this.form = response.data;
-                this.open = true;
-                this.title = "审核用户";
-                this.form.checkStatus = 1
+            this.open = true;
+            this.form = Object.assign({}, row)
+            let list = row.comboType.split(',')
+            list.forEach(i => {
+                this.value.push(+i)
             });
         },
 
         /** 提交按钮 */
         submitForm() {
+            this.form.comboType = this.value.join(",")
             this.$refs["form"].validate((valid) => {
                 if (valid) {
                     if (this.form.userId != undefined) {
-                        var applyForm = {
-                            userId: this.form.userId,
-                            checkStatus: this.form.checkStatus
-                        }
-                        applyUser(applyForm).then(res => {
+                        applyBusiness(this.form).then(res => {
                             this.$modal.msgSuccess("修改成功");
                             this.open = false;
                             this.getList();
