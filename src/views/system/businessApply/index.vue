@@ -11,11 +11,11 @@
                     <el-form-item label="手机号码" prop="mobile" class="el-form-search-item">
                         <el-input v-model="queryParams.mobile" placeholder="请输入手机号码" clearable size="small" @keyup.enter.native="handleQuery" />
                     </el-form-item>
-                    <el-form-item label="状态" prop="status" class="el-form-search-item">
-                        <el-select v-model="queryParams.status" placeholder="用户状态" clearable size="small">
-                            <el-option v-for="dict in dict.type.sys_normal_disable" :key="dict.value" :label="dict.label" :value="dict.value" />
-                        </el-select>
-                    </el-form-item>
+<!--                    <el-form-item label="状态" prop="status" class="el-form-search-item">-->
+<!--                        <el-select v-model="queryParams.status" placeholder="用户状态" clearable size="small">-->
+<!--                            <el-option v-for="dict in dict.type.sys_normal_disable" :key="dict.value" :label="dict.label" :value="dict.value" />-->
+<!--                        </el-select>-->
+<!--                    </el-form-item>-->
                     <el-form-item class="el-form-search-item">
                         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
                         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -27,11 +27,11 @@
                 <el-table-column label="用户名称" align="center" key="userName" prop="userName" :show-overflow-tooltip="true" />
                 <el-table-column label="手机号码" align="center" key="mobile" prop="mobile" width="120" />
                 <el-table-column label="地址" align="center" key="address" prop="address" :show-overflow-tooltip="true" />
-                <el-table-column label="状态" align="center" key="status">
-                    <template slot-scope="scope">
-                        <el-switch v-model="scope.row.status" active-value="0" inactive-value="1" disabled></el-switch>
-                    </template>
-                </el-table-column>
+<!--                <el-table-column label="状态" align="center" key="status">-->
+<!--                    <template slot-scope="scope">-->
+<!--                        <el-switch v-model="scope.row.status" active-value="0" inactive-value="1" disabled></el-switch>-->
+<!--                    </template>-->
+<!--                </el-table-column>-->
                 <el-table-column label="创建时间" align="center" prop="createTime" width="160">
                     <template slot-scope="scope">
                         <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -88,6 +88,7 @@
                 <el-col :span="12">
                     <el-form-item label="审核状态" prop="checkStatus">
                         <el-select v-model="form.checkStatus" placeholder="审核状态" size="small">
+                            <el-option label="待审核" :value="0" />
                             <el-option label="审核通过" :value="1" />
                             <el-option label="审核驳回" :value="2" />
                         </el-select>
@@ -128,7 +129,7 @@ export default {
             open: false,
             // 表单参数
             form: {
-                
+
             },
             //办理业务
             businessOptions: [{
@@ -163,10 +164,8 @@ export default {
             queryParams: {
                 pageNum: 1,
                 pageSize: 20,
-                userName: undefined,
-                mobile: undefined,
-                status: undefined
-                
+                userName: '',
+                mobile: '',
             },
 
             // 表单校验
@@ -199,7 +198,7 @@ export default {
         /** 查询商机列表 */
         getList() {
             this.loading = true;
-            listBusiness().then(
+            listBusiness(this.queryParams).then(
                 (response) => {
                     this.userList = response.rows;
                     this.total = response.total;
@@ -254,13 +253,11 @@ export default {
             this.form.comboType = this.value.join(",")
             this.$refs["form"].validate((valid) => {
                 if (valid) {
-                    if (this.form.userId != undefined) {
                         applyBusiness(this.form).then(res => {
-                            this.$modal.msgSuccess("修改成功");
+                            this.$modal.msgSuccess("操作成功");
                             this.open = false;
                             this.getList();
                         });
-                    }
                 }
             });
         },

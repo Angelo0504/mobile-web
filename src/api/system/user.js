@@ -136,10 +136,11 @@ export function updateAuthRole(data) {
 }
 
 //查询商机列表
-export function listBusiness() {
+export function listBusiness(query) {
   return request({
     url: '/system/info/list',
-    method: 'get'
+    method: 'get',
+    params: query
   })
 }
 

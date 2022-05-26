@@ -66,6 +66,7 @@
                 <el-col :span="12">
                     <el-form-item label="审核状态" prop="checkStatus">
                         <el-select v-model="form.checkStatus" placeholder="审核状态" size="small">
+                            <el-option label="待审核" :value="0" />
                             <el-option label="审核通过" :value="1" />
                             <el-option label="审核驳回" :value="2" />
                         </el-select>
@@ -128,7 +129,7 @@ export default {
                 deptId: undefined,
                 userType: "01",
             },
-            
+
             // 表单校验
             rules: {
                 nickName: [{
@@ -224,7 +225,7 @@ export default {
                             checkStatus: this.form.checkStatus
                         }
                         applyUser(applyForm).then(res => {
-                            this.$modal.msgSuccess("修改成功");
+                            this.$modal.msgSuccess("操作成功");
                             this.open = false;
                             this.getList();
                         });
