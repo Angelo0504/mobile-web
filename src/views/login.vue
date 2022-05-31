@@ -1,14 +1,14 @@
 <template>
   <div class="login">
     <div class="login-logo hidden-md-and-down">
-      <span> 开源字节 | 通行证</span>
+      <span> 独乐乐不如众乐乐</span>
     </div>
-    <h2 class="main-title"><span>开源字节</span></h2>
-    <h3 class="sub-title">登录开源字节，发现和创造更符合社会需要的产品！</h3>
+    <h2 class="main-title"><span>众娱禾乐</span></h2>
+    <h3 class="sub-title">登录众娱禾乐，一起享受娱乐！</h3>
     <div class="login-box">
       <div class="weixin" v-show="loginType === 0">
         <div class="title">微信扫码登录</div>
-        <div class="login-switch" @click="changeLoginType(1)">
+        <div class="login-switch" @click="">
           <div class="static-img">
             <img src="../assets/images/电脑登录.png" alt="密码登录" />
           </div>
@@ -23,7 +23,7 @@
       </div>
       <div class="pc" v-show="loginType === 1">
         <div class="title">密码登录</div>
-        <div class="login-switch" @click="changeLoginType(0)">
+        <div class="login-switch" @click="">
           <div class="static-img">
             <img src="../assets/images/二维码.png" alt="微信扫码登录" />
           </div>
@@ -110,8 +110,8 @@
     <!--  底部  -->
     <div class="el-login-footer">
       <span>
-        <a href="https://sourcebyte.cn" target="_blank"
-          >Copyright © 2021-2022 开源字节 Open Source Byte All Rights
+        <a href="https://angelo.show" target="_blank"
+          >Copyright © 2022 南京众娱禾乐 NJ ZYHL All Rights
           Reserved.</a
         >
       </span>
@@ -132,15 +132,15 @@ export default {
   name: "Login",
   data() {
     return {
-      loginType: 0,
+      loginType: 1,
       wxQrcode: "https://sourcebyte.cn/profile/customer/file/wx-gzh.jpg",
       // wsuri: "ws://127.0.0.1:8088/websocket/message",
       wsuri: "wss://sourcebyte.cn/web-api/websocket/message",
       ws: null,
       codeUrl: "",
       loginForm: {
-        username: "demo",
-        password: "123456",
+        username: "",
+        password: "",
         rememberMe: false,
         code: "",
         uuid: "",
@@ -387,7 +387,7 @@ export default {
 
 .login-box {
   width: 400px;
-  background: #ffffff;
+  background: #4d4b4b;
   position: relative;
   margin: 0 auto;
   padding: 30px 0 0 0;
@@ -431,7 +431,7 @@ export default {
 
 .login-form {
   border-radius: 6px;
-  background: #ffffff;
+  background: #494848;
   width: 400px;
   padding: 40px 40px 20px 40px;
   .el-input {

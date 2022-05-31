@@ -3,7 +3,7 @@
     <el-alert
       title="信息服务"
       type="info"
-      description="我们传播开源的理念，推广开源项目。欢迎有信息需要分发的朋友添加微信咨询（187-2098-9281）"
+      description="我们传播176(一起乐)理念，推广酒吧娱乐系统。欢迎有需要酒吧系统的老板添加微信咨询（dsj_dushoujian）"
       style="line-height: 2"
     >
     </el-alert>

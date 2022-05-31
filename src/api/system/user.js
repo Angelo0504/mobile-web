@@ -10,6 +10,20 @@ export function listUser(query) {
   })
 }
 
+export function listApplyPointsLog() {
+  return request({
+    url: '/system/user/applyPointsLoglist',
+    method: 'get',
+  })
+}
+
+export function listExchangePointsLog() {
+  return request({
+    url: '/system/user/exchangePointsLoglist',
+    method: 'get',
+  })
+}
+
 // 查询用户详细
 export function getUser(userId) {
   return request({

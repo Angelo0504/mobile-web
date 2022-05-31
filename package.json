@@ -1,8 +1,8 @@
 {
   "name": "ruoyi",
   "version": "3.8.1",
-  "description": "开源字节",
-  "author": "詹Sir",
+  "description": "众娱禾乐",
+  "author": "Angelo",
   "license": "MIT",
   "scripts": {
     "dev": "vue-cli-service serve",
@@ -32,7 +32,7 @@
   ],
   "repository": {
     "type": "gitee",
-    "url": "https://gitee.com/open-source-byte/source-vue"
+    "url": "https://angelo.show"
   },
   "dependencies": {
     "@riophae/vue-treeselect": "0.4.0",

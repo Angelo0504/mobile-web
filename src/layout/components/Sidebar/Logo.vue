@@ -35,7 +35,7 @@ export default {
   },
   data() {
     return {
-      title: '开源字节',
+      title: '众娱禾乐',
       logo: logoImg
     }
   }

@@ -11,6 +11,9 @@
                     <el-form-item label="手机号码" prop="mobile" class="el-form-search-item">
                         <el-input v-model="queryParams.mobile" placeholder="请输入手机号码" clearable size="small" @keyup.enter.native="handleQuery" />
                     </el-form-item>
+                  <el-form-item label="申请人" prop="mobile" class="el-form-search-item">
+                    <el-input v-model="queryParams.createBy" placeholder="请输入申请人" clearable size="small" @keyup.enter.native="handleQuery" />
+                  </el-form-item>
 <!--                    <el-form-item label="状态" prop="status" class="el-form-search-item">-->
 <!--                        <el-select v-model="queryParams.status" placeholder="用户状态" clearable size="small">-->
 <!--                            <el-option v-for="dict in dict.type.sys_normal_disable" :key="dict.value" :label="dict.label" :value="dict.value" />-->
@@ -27,11 +30,14 @@
                 <el-table-column label="用户名称" align="center" key="userName" prop="userName" :show-overflow-tooltip="true" />
                 <el-table-column label="手机号码" align="center" key="mobile" prop="mobile" width="120" />
                 <el-table-column label="地址" align="center" key="address" prop="address" :show-overflow-tooltip="true" />
-<!--                <el-table-column label="状态" align="center" key="status">-->
-<!--                    <template slot-scope="scope">-->
-<!--                        <el-switch v-model="scope.row.status" active-value="0" inactive-value="1" disabled></el-switch>-->
-<!--                    </template>-->
-<!--                </el-table-column>-->
+                <el-table-column label="审核状态" align="center" prop="checkStatus" width="160">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.checkStatus===0">待审核</span>
+                    <span v-else-if="scope.row.checkStatus===1">审核通过</span>
+                    <span v-else>审核驳回</span>
+                  </template>
+                </el-table-column>
+              <el-table-column label="申请人" align="center" key="createBy" prop="createBy" :show-overflow-tooltip="true" />
                 <el-table-column label="创建时间" align="center" prop="createTime" width="160">
                     <template slot-scope="scope">
                         <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -88,7 +94,7 @@
                 <el-col :span="12">
                     <el-form-item label="审核状态" prop="checkStatus">
                         <el-select v-model="form.checkStatus" placeholder="审核状态" size="small">
-                            <el-option label="待审核" :value="0" />
+<!--                            <el-option label="待审核" :value="0" />-->
                             <el-option label="审核通过" :value="1" />
                             <el-option label="审核驳回" :value="2" />
                         </el-select>
@@ -166,6 +172,7 @@ export default {
                 pageSize: 20,
                 userName: '',
                 mobile: '',
+                createBy: '',
             },
 
             // 表单校验
@@ -242,6 +249,7 @@ export default {
         handleUpdate(row) {
             this.open = true;
             this.form = Object.assign({}, row)
+            this.form.checkStatus = 1
             let list = row.comboType.split(',')
             list.forEach(i => {
                 this.value.push(+i)
