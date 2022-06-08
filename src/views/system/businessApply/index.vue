@@ -25,6 +25,15 @@
                     <el-form-item class="el-form-search-item">
                         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
                         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+                      <el-col :span="1.5">
+                        <el-button
+                          type="warning"
+                          plain
+                          icon="el-icon-download"
+                          size="mini"
+                          @click="handleExport"
+                        >导出</el-button>
+                      </el-col>
                     </el-form-item>
                 </el-form>
             </el-row>
@@ -275,6 +284,16 @@ export default {
                 }
             });
         },
+      /** 导出按钮操作 */
+      handleExport() {
+        this.download(
+          "system/info/export",
+          {
+            ...this.queryParams,
+          },
+          `businessInfo_${new Date().getTime()}.xlsx`
+        );
+      },
     },
 };
 </script>
