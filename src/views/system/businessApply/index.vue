@@ -11,29 +11,23 @@
                     <el-form-item label="商机号码" prop="mobile" class="el-form-search-item">
                         <el-input v-model="queryParams.mobile" placeholder="请输入商机号码" clearable size="small" @keyup.enter.native="handleQuery" />
                     </el-form-item>
-                  <el-form-item label="注册手机号" prop="mobile" class="el-form-search-item">
-                    <el-input v-model="queryParams.createBy" placeholder="请输入注册手机号" clearable size="small" @keyup.enter.native="handleQuery" />
-                  </el-form-item>
-                  <el-form-item label="业务类型" prop="businessType" class="el-form-search-item">
-                    <el-input v-model="queryParams.businessType" placeholder="请输入注册手机号" clearable size="small" @keyup.enter.native="handleQuery" />
-                  </el-form-item>
-<!--                    <el-form-item label="状态" prop="status" class="el-form-search-item">-->
-<!--                        <el-select v-model="queryParams.status" placeholder="用户状态" clearable size="small">-->
-<!--                            <el-option v-for="dict in dict.type.sys_normal_disable" :key="dict.value" :label="dict.label" :value="dict.value" />-->
-<!--                        </el-select>-->
-<!--                    </el-form-item>-->
+                    <el-form-item label="注册手机号" prop="mobile" class="el-form-search-item">
+                        <el-input v-model="queryParams.createBy" placeholder="请输入注册手机号" clearable size="small" @keyup.enter.native="handleQuery" />
+                    </el-form-item>
+                    <el-form-item label="业务类型" prop="businessType" class="el-form-search-item">
+                        <el-input v-model="queryParams.businessType" placeholder="请输入注册手机号" clearable size="small" @keyup.enter.native="handleQuery" />
+                    </el-form-item>
+                    <!--                    <el-form-item label="状态" prop="status" class="el-form-search-item">-->
+                    <!--                        <el-select v-model="queryParams.status" placeholder="用户状态" clearable size="small">-->
+                    <!--                            <el-option v-for="dict in dict.type.sys_normal_disable" :key="dict.value" :label="dict.label" :value="dict.value" />-->
+                    <!--                        </el-select>-->
+                    <!--                    </el-form-item>-->
                     <el-form-item class="el-form-search-item">
                         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
                         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-                      <el-col :span="1.5">
-                        <el-button
-                          type="warning"
-                          plain
-                          icon="el-icon-download"
-                          size="mini"
-                          @click="handleExport"
-                        >导出</el-button>
-                      </el-col>
+                        <el-col :span="1.5">
+                            <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport">导出</el-button>
+                        </el-col>
                     </el-form-item>
                 </el-form>
             </el-row>
@@ -43,15 +37,17 @@
                 <el-table-column label="商机号码" align="center" key="mobile" prop="mobile" width="120" />
                 <el-table-column label="业务类型" align="center" key="businessType" prop="businessType" width="120" />
                 <el-table-column label="地址" align="center" key="address" prop="address" :show-overflow-tooltip="true" />
-              <el-table-column label="获得积分" align="center" key="points" prop="points" :show-overflow-tooltip="true" />
+                <el-table-column label="获得积分" align="center" key="points" prop="points" :show-overflow-tooltip="true" />
                 <el-table-column label="审核状态" align="center" prop="checkStatus" width="160">
-                  <template slot-scope="scope">
-                    <span v-if="scope.row.checkStatus===0">待审核</span>
-                    <span v-else-if="scope.row.checkStatus===1">审核通过</span>
-                    <span v-else>审核驳回</span>
-                  </template>
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.checkStatus===0">提交</span>
+                        <span v-else-if="scope.row.checkStatus===1">审核通过</span>
+                        <span v-else-if="scope.row.checkStatus===2">审核拒绝</span>
+                        <span v-else-if="scope.row.checkStatus===3">接单</span>
+                        <span v-else>核销</span>
+                    </template>
                 </el-table-column>
-              <el-table-column label="注册手机号" align="center" key="createBy" prop="createBy" :show-overflow-tooltip="true" />
+                <el-table-column label="注册手机号" align="center" key="createBy" prop="createBy" :show-overflow-tooltip="true" />
                 <el-table-column label="创建时间" align="center" prop="createTime" width="160">
                     <template slot-scope="scope">
                         <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -60,7 +56,9 @@
                 <el-table-column label="备注" align="center" key="remark" prop="remark" :show-overflow-tooltip="true" />
                 <el-table-column label="操作" align="center" width="160" class-name="small-padding fixed-width">
                     <template slot-scope="scope">
-                        <el-button size="mini" type="text" icon="el-icon-edit" :disabled="scope.row.checkStatus" @click="handleUpdate(scope.row)">审核</el-button>
+                        <el-button size="mini" type="text" icon="el-icon-edit" v-if="scope.row.checkStatus==3" @click="handleUpdate(scope.row)">审核</el-button>
+                        <el-button size="mini" type="text" icon="el-icon-edit" v-if="scope.row.checkStatus==0" @click="handleCommit(scope.row)">接单</el-button>
+                        <el-button size="mini" type="text" icon="el-icon-edit" v-if="scope.row.checkStatus==1" @click="handleClear(scope.row)">核销</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -94,26 +92,29 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="12">
+                    <el-form-item label="业务类型" prop="businessType">
+                        <el-input v-model="form.businessType" placeholder="请输入业务类型" />
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="审核状态" prop="checkStatus">
+                        <el-select v-model="form.checkStatus" placeholder="审核状态" size="small">
+                            <el-option label="审核通过" :value="1" />
+                            <el-option label="审核驳回" :value="2" />
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
                     <el-form-item label="办理业务">
                         <el-select v-model="value" multiple placeholder="请选择">
                             <el-option-group v-for="group in businessOptions" :key="group.label" :label="group.label">
                                 <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
                                 </el-option>
                             </el-option-group>
-                            <!-- <el-option v-for="item in businessOptions" :key="item.value" :label="item.label" :value="item.value">
-                            </el-option> -->
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :span="12">
-                    <el-form-item label="审核状态" prop="checkStatus">
-                        <el-select v-model="form.checkStatus" placeholder="审核状态" size="small">
-<!--                            <el-option label="待审核" :value="0" />-->
-                            <el-option label="审核通过" :value="1" />
-                            <el-option label="审核驳回" :value="2" />
-                        </el-select>
-                    </el-form-item>
-                </el-col>
+
             </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -155,26 +156,38 @@ export default {
             businessOptions: [{
                 label: '神州行、动感地带积分激励',
                 options: [{
-                    label: "套餐139元,折后39元,玄新授权点奖励300分",
+                    label: "39套餐,300分",
                     value: 1
                 }, {
-                    label: "套餐199元,折后109元,玄新授权点奖励400分",
+                    label: "109套餐,400分",
                     value: 2
                 }, {
-                    label: "套餐299元,折后119元,玄新授权点奖励500分",
+                    label: "119套餐,500分",
                     value: 3
                 }]
             }, {
                 label: '宽带积分激励',
                 options: [{
-                    label: "宽带,玄新授权点奖励:100分/条",
+                    label: "宽带,100分/条",
                     value: 4
                 }]
             }, {
                 label: "入网积分激励",
                 options: [{
-                    label: "100元39套餐卡,玄新授权点奖励:30分/个",
+                    label: "5GPLUS卡159元,120分",
                     value: 5
+                }, {
+                    label: "5GPLUS卡109元,80分",
+                    value: 6
+                }, {
+                    label: "5GPLUS卡89元,60分",
+                    value: 7
+                }, {
+                    label: "新南京人39元,40分",
+                    value: 8
+                }, {
+                    label: "副卡,10分",
+                    value: 9
                 }]
             }],
 
@@ -241,9 +254,9 @@ export default {
                 userId: undefined,
                 userName: undefined,
                 mobile: undefined,
-                address:"",
+                address: "",
                 checkStatus: 1,
-                comboType:""
+                comboType: ""
             };
             this.resetForm("form");
         },
@@ -271,29 +284,68 @@ export default {
             });
         },
 
+        handleCommit(row) {
+            this.$confirm('是否确认接单?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.form = Object.assign({}, row)
+                this.form.checkStatus = 3
+                applyBusiness(this.form).then(res => {
+                        this.$modal.msgSuccess("操作成功");
+                        this.getList();
+                    });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消'
+                });
+            });
+        },
+
+        handleClear(row){
+            this.$confirm('是否确认核销?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.form = Object.assign({}, row)
+                this.form.checkStatus = 4
+                applyBusiness(this.form).then(res => {
+                        this.$modal.msgSuccess("操作成功");
+                        this.getList();
+                    });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消'
+                });
+            });
+        },
+
         /** 提交按钮 */
         submitForm() {
             this.form.comboType = this.value.join(",")
             this.$refs["form"].validate((valid) => {
                 if (valid) {
-                        applyBusiness(this.form).then(res => {
-                            this.$modal.msgSuccess("操作成功");
-                            this.open = false;
-                            this.getList();
-                        });
+                    applyBusiness(this.form).then(res => {
+                        this.$modal.msgSuccess("操作成功");
+                        this.open = false;
+                        this.getList();
+                    });
                 }
             });
         },
-      /** 导出按钮操作 */
-      handleExport() {
-        this.download(
-          "system/info/export",
-          {
-            ...this.queryParams,
-          },
-          `businessInfo_${new Date().getTime()}.xlsx`
-        );
-      },
+        /** 导出按钮操作 */
+        handleExport() {
+            this.download(
+                "system/info/export", {
+                    ...this.queryParams,
+                },
+                `businessInfo_${new Date().getTime()}.xlsx`
+            );
+        },
     },
 };
 </script>

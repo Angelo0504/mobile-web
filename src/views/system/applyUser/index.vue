@@ -4,18 +4,18 @@
         <!--用户数据-->
         <el-col :span="24" :xs="24">
             <el-row :gutter="24" class="mb8">
-                <el-form :model="queryParams" ref="queryForm" :inline="true"  label-width="68px" class="el-form-search">
-<!--                    <el-form-item label="用户名称" prop="userName" class="el-form-search-item">-->
-<!--                        <el-input v-model="queryParams.userName" placeholder="请输入用户名称" clearable size="small"  @keyup.enter.native="handleQuery" />-->
-<!--                    </el-form-item>-->
+                <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px" class="el-form-search">
+                    <!--                    <el-form-item label="用户名称" prop="userName" class="el-form-search-item">-->
+                    <!--                        <el-input v-model="queryParams.userName" placeholder="请输入用户名称" clearable size="small"  @keyup.enter.native="handleQuery" />-->
+                    <!--                    </el-form-item>-->
                     <el-form-item label="手机号码" prop="phonenumber" class="el-form-search-item">
-                        <el-input v-model="queryParams.phonenumber" placeholder="请输入手机号码" clearable size="small"  @keyup.enter.native="handleQuery" />
+                        <el-input v-model="queryParams.phonenumber" placeholder="请输入手机号码" clearable size="small" @keyup.enter.native="handleQuery" />
                     </el-form-item>
-<!--                    <el-form-item label="状态" prop="status" class="el-form-search-item">-->
-<!--                        <el-select v-model="queryParams.status" placeholder="用户状态" clearable size="small" >-->
-<!--                            <el-option v-for="dict in dict.type.sys_normal_disable" :key="dict.value" :label="dict.label" :value="dict.value" />-->
-<!--                        </el-select>-->
-<!--                    </el-form-item>-->
+                    <!--                    <el-form-item label="状态" prop="status" class="el-form-search-item">-->
+                    <!--                        <el-select v-model="queryParams.status" placeholder="用户状态" clearable size="small" >-->
+                    <!--                            <el-option v-for="dict in dict.type.sys_normal_disable" :key="dict.value" :label="dict.label" :value="dict.value" />-->
+                    <!--                        </el-select>-->
+                    <!--                    </el-form-item>-->
                     <el-form-item class="el-form-search-item">
                         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
                         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -24,31 +24,26 @@
             </el-row>
 
             <el-table :height="tableHeight" v-loading="loading" :data="userList">
-                <el-table-column label="用户编号" align="center" key="userId" prop="userId"  />
-<!--                <el-table-column label="用户名称" align="center" key="userName" prop="userName"  :show-overflow-tooltip="true" />-->
-                <el-table-column label="用户名" align="center" key="nickName" prop="nickName"  :show-overflow-tooltip="true" />
-                <el-table-column label="手机号码" align="center" key="phonenumber" prop="phonenumber"  width="120" />
-<!--                <el-table-column label="状态" align="center" key="status" >-->
-<!--                    <template slot-scope="scope">-->
-<!--                        <el-switch v-model="scope.row.status" active-value="0" inactive-value="1" disabled></el-switch>-->
-<!--                    </template>-->
-<!--                </el-table-column>-->
-              <el-table-column label="审核状态" align="center" prop="checkStatus" width="160">
-                <template slot-scope="scope">
-                  <span v-if="scope.row.checkStatus===0">待审核</span>
-                  <span v-else-if="scope.row.checkStatus===1">审核通过</span>
-                  <span v-else>审核驳回</span>
-                </template>
-              </el-table-column>
-              <el-table-column label="积分" align="center" key="points" prop="points"  :show-overflow-tooltip="true" />
-                <el-table-column label="创建时间" align="center" prop="createTime"  width="160">
+                <el-table-column label="用户编号" align="center" key="userId" prop="userId" />
+                <!--                <el-table-column label="用户名称" align="center" key="userName" prop="userName"  :show-overflow-tooltip="true" />-->
+                <el-table-column label="用户名" align="center" key="nickName" prop="nickName" :show-overflow-tooltip="true" />
+                <el-table-column label="手机号码" align="center" key="phonenumber" prop="phonenumber" width="120" />
+                <el-table-column label="审核状态" align="center" prop="checkStatus" width="160">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.checkStatus===0">待审核</span>
+                        <span v-else-if="scope.row.checkStatus===1">审核通过</span>
+                        <span v-else>审核驳回</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="积分" align="center" key="points" prop="points" :show-overflow-tooltip="true" />
+                <el-table-column label="创建时间" align="center" prop="createTime" width="160">
                     <template slot-scope="scope">
                         <span>{{ parseTime(scope.row.createTime) }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" align="center" width="160" class-name="small-padding fixed-width">
                     <template slot-scope="scope">
-                        <el-button size="mini" type="text" icon="el-icon-edit" :disabled="scope.row.checkStatus" @click="handleUpdate(scope.row)">审核</el-button>
+                        <el-button size="mini" type="text" icon="el-icon-edit"  @click="handleUpdate(scope.row)">审核</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -57,7 +52,7 @@
         </el-col>
     </el-row>
 
-    <!-- 添加或修改用户配置对话框 -->
+    <!-- 添加或修改用户配置对话框 :disabled="scope.row.checkStatus>0"-->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
             <el-row>
@@ -74,10 +69,24 @@
                 <el-col :span="12">
                     <el-form-item label="审核状态" prop="checkStatus">
                         <el-select v-model="form.checkStatus" placeholder="审核状态" size="small">
-<!--                            <el-option label="待审核" :value="0" />-->
+                            <!--                            <el-option label="待审核" :value="0" />-->
                             <el-option label="审核通过" :value="1" />
                             <el-option label="审核驳回" :value="2" />
                         </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="24">
+                    <el-form-item label="身份证" prop="idImages">
+                        <el-upload action="" :file-list="idImages" list-type="picture-card"  >
+                            <i class="el-icon-plus"></i>
+                        </el-upload>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="24">
+                    <el-form-item label="营业执照" prop="busniessImages">
+                        <el-upload action="" :file-list="busniessImages"  list-type="picture-card"  >
+                            <i class="el-icon-plus"></i>
+                        </el-upload>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -157,6 +166,9 @@ export default {
                     trigger: "blur"
                 }, ],
             },
+
+            idImages:[],
+            busniessImages:[]
         };
     },
 
@@ -213,8 +225,16 @@ export default {
 
         /** 修改按钮操作 */
         handleUpdate(row) {
+            console.log("图片信息",JSON.stringify(row))
             this.reset();
             const userId = row.userId || this.ids;
+            if(row.businessLicenseList && row.businessLicenseList.length>0){
+                this.busniessImages = row.businessLicenseList
+               
+            }
+            if(row.idCardList && row.idCardList.length>0){
+                this.idImages = row.idCardList
+            }
             getUser(userId).then((response) => {
                 this.form = response.data;
                 this.open = true;
