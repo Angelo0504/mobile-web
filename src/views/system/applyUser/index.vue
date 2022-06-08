@@ -2,8 +2,8 @@
 <div class="app-container">
     <el-row :gutter="24">
         <!--用户数据-->
-        <el-col :span="20" :xs="24">
-            <el-row :gutter="20" class="mb8">
+        <el-col :span="24" :xs="24">
+            <el-row :gutter="24" class="mb8">
                 <el-form :model="queryParams" ref="queryForm" :inline="true"  label-width="68px" class="el-form-search">
 <!--                    <el-form-item label="用户名称" prop="userName" class="el-form-search-item">-->
 <!--                        <el-input v-model="queryParams.userName" placeholder="请输入用户名称" clearable size="small"  @keyup.enter.native="handleQuery" />-->

@@ -2,7 +2,7 @@
 <div class="app-container">
     <el-row :gutter="24">
         <!--用户数据-->
-        <el-col :span="20" :xs="24">
+        <el-col :span="24" :xs="24">
 <!--            <el-row :gutter="20" class="mb8">-->
 <!--                <el-form :model="queryParams" ref="queryForm" :inline="true"  label-width="68px" class="el-form-search">-->
 <!--                    <el-form-item label="手机号码" prop="phonenumber" class="el-form-search-item">-->
@@ -16,8 +16,8 @@
 <!--            </el-row>-->
             <el-table :height="tableHeight" v-loading="loading" :data="userList">
                 <el-table-column label="兑换用户" align="center" key="exchangeUser" prop="exchangeUser"  :show-overflow-tooltip="true" />
-                <el-table-column label="兑换积分数" align="center" key="points" prop="points"  width="120" />
-                <el-table-column label="创建时间" align="center" prop="createTime"  width="160">
+                <el-table-column label="兑换积分数" align="center" key="points" prop="points" />
+                <el-table-column label="创建时间" align="center" prop="createTime" >
                     <template slot-scope="scope">
                         <span>{{ parseTime(scope.row.createTime) }}</span>
                     </template>

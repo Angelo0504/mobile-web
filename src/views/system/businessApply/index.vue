@@ -2,17 +2,20 @@
 <div class="app-container">
     <el-row :gutter="24">
         <!--用户数据-->
-        <el-col :span="20" :xs="24">
-            <el-row :gutter="20" class="mb8">
-                <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px" class="el-form-search">
+        <el-col :span="24" :xs="24">
+            <el-row :gutter="24" class="mb8">
+                <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="90px" class="el-form-search">
                     <el-form-item label="用户名称" prop="userName" class="el-form-search-item">
                         <el-input v-model="queryParams.userName" placeholder="请输入用户名称" clearable size="small" @keyup.enter.native="handleQuery" />
                     </el-form-item>
-                    <el-form-item label="手机号码" prop="mobile" class="el-form-search-item">
-                        <el-input v-model="queryParams.mobile" placeholder="请输入手机号码" clearable size="small" @keyup.enter.native="handleQuery" />
+                    <el-form-item label="商机号码" prop="mobile" class="el-form-search-item">
+                        <el-input v-model="queryParams.mobile" placeholder="请输入商机号码" clearable size="small" @keyup.enter.native="handleQuery" />
                     </el-form-item>
-                  <el-form-item label="申请人" prop="mobile" class="el-form-search-item">
-                    <el-input v-model="queryParams.createBy" placeholder="请输入申请人" clearable size="small" @keyup.enter.native="handleQuery" />
+                  <el-form-item label="注册手机号" prop="mobile" class="el-form-search-item">
+                    <el-input v-model="queryParams.createBy" placeholder="请输入注册手机号" clearable size="small" @keyup.enter.native="handleQuery" />
+                  </el-form-item>
+                  <el-form-item label="业务类型" prop="businessType" class="el-form-search-item">
+                    <el-input v-model="queryParams.businessType" placeholder="请输入注册手机号" clearable size="small" @keyup.enter.native="handleQuery" />
                   </el-form-item>
 <!--                    <el-form-item label="状态" prop="status" class="el-form-search-item">-->
 <!--                        <el-select v-model="queryParams.status" placeholder="用户状态" clearable size="small">-->
@@ -28,8 +31,10 @@
 
             <el-table :height="tableHeight" v-loading="loading" :data="userList">
                 <el-table-column label="用户名称" align="center" key="userName" prop="userName" :show-overflow-tooltip="true" />
-                <el-table-column label="手机号码" align="center" key="mobile" prop="mobile" width="120" />
+                <el-table-column label="商机号码" align="center" key="mobile" prop="mobile" width="120" />
+                <el-table-column label="业务类型" align="center" key="businessType" prop="businessType" width="120" />
                 <el-table-column label="地址" align="center" key="address" prop="address" :show-overflow-tooltip="true" />
+              <el-table-column label="获得积分" align="center" key="points" prop="points" :show-overflow-tooltip="true" />
                 <el-table-column label="审核状态" align="center" prop="checkStatus" width="160">
                   <template slot-scope="scope">
                     <span v-if="scope.row.checkStatus===0">待审核</span>
@@ -37,7 +42,7 @@
                     <span v-else>审核驳回</span>
                   </template>
                 </el-table-column>
-              <el-table-column label="申请人" align="center" key="createBy" prop="createBy" :show-overflow-tooltip="true" />
+              <el-table-column label="注册手机号" align="center" key="createBy" prop="createBy" :show-overflow-tooltip="true" />
                 <el-table-column label="创建时间" align="center" prop="createTime" width="160">
                     <template slot-scope="scope">
                         <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -173,6 +178,7 @@ export default {
                 userName: '',
                 mobile: '',
                 createBy: '',
+                businessType: '',
             },
 
             // 表单校验
